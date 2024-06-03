@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-// import { Outlet, Link } from "react-router-dom";
-import './App.css';
+import { useEffect, useState } from 'react'
+import './App.css'
 
 const documentHeight = () => {
   const doc = document.documentElement;
@@ -41,7 +40,7 @@ function TaskBox() {
   var date = new Date();
   const nowtime = setTimeFormat(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes());
 
-  const [task, setTask] = useState(({val: 0, word: "", time: nowtime, del: 0, tag: 0, num: numOfTask}));
+  const [task, setTask] = useState(() => ({val: 0, word: "", time: nowtime, del: 0, tag: 0, num: numOfTask}));
 
   function handleTaskCheck() {
     setTask(prev => {
@@ -188,12 +187,6 @@ function App() {
       return neww;
     });
   }
-
-  // useEffect(() => {
-  //   fetch("http://localhost:5174/task")
-  //     .then((response) => response.json())
-  //     .then((json) => setItems(json));
-  // }, []);
   
   return (
     <>
