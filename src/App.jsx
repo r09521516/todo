@@ -33,54 +33,68 @@ const setTimeFormat = (yyyy, mm, dd, hh, ms) => {
   }
   return format;
 }
+var date = new Date();
+const nowtime = setTimeFormat(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes());
 
-let numOfTask = 0;
+function TaskBox({ task, id, handleTaskCheck, handleTaskDel, handleTaskTag }) {
 
-function TaskBox() {
+  return (
+    <>
+      <div id={`taskbox${id}`}  className="box">
+        <div className="checkarea">
+          <input type="checkbox" id={`check${id}`} className="checkboxarea" onClick={handleTaskCheck}/>
+          <label htmlFor={`check${id}`} className="undo"><i className="fa fa-square" aria-hidden="true"></i></label>
+          <label htmlFor={`check${id}`} className="isdo"><i className="fa fa-check-square" aria-hidden="true"></i></label>
+        </div>
+        <div className="taskarea">
+          <input 
+            type="text" 
+            id={`task-input${id}`} 
+            className="task-input"
+            onChange={(e) => (task.word = e.target.value)} 
+            placeholder="New event"
+            spellCheck="false"
+          />
+          <p id={`task-time${id}`} className="task-time">{task.time}</p>
+        </div>
+        <button id={`task-del${id}`} className="btn-task del" onClick={handleTaskDel}><i className="fa fa-trash" aria-hidden="true"></i></button>
+        <button id={`task-tag${id}`} className="btn-task tag" onClick={handleTaskTag}><i className="fa fa-star" aria-hidden="true"></i></button>
+      </div>
+    </>
+  )
+}
 
-  var date = new Date();
-  const nowtime = setTimeFormat(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes());
+function App() {
+  const [title, setTitle] = useState("Hello TODO!");
+  const [tasks, setTasks] = useState([{ word: "", time: nowtime, val: false, del: false, tag: false }]);
+  const [show, setShow] = useState();
 
-  const [task, setTask] = useState(({val: 0, word: "", time: nowtime, del: 0, tag: 0, num: numOfTask}));
+  function handleTaskCheck(id) {
+    tasks[id].val = !tasks[id].val;
+    if (tasks[id].val == true && tasks[id].tag == true) {
+      tasks[id].tag = false;
+    }
 
-  function handleTaskCheck() {
-    setTask(prev => {
-      let neww = prev;
-      if (prev.val == 0) {
-        neww.val = 1;
-      } else {
-        neww.val = 0;
-      }
-      return neww;
-    });
-
-    let btntag = document.getElementById(`task-tag${task.num}`);
-    let box = document.getElementById(`taskbox${task.num}`);
-    if (document.getElementById(`check${task.num}`).checked) {
-      document.getElementById(`task-input${task.num}`).style.setProperty("text-decoration", "line-through");
+    let btntag = document.getElementById(`task-tag${id}`);
+    let box = document.getElementById(`taskbox${id}`);
+    let inputtext = document.getElementById(`task-input${id}`);
+    if (document.getElementById(`check${id}`).checked) {
+      inputtext.style.setProperty("text-decoration", "line-through");
       box.style.setProperty("opacity", "0.6");
       if (btntag.classList.contains("important")) {
         btntag.classList.remove("important");
         box.classList.remove("importanttag");
       }
     } else {
-      document.getElementById(`task-input${task.num}`).style.setProperty("text-decoration", "none");
+      inputtext.style.setProperty("text-decoration", "none");
       box.style.setProperty("opacity", "1");
     }
   }
   
-  function handleTaskDel() {
-    setTask(prev => {
-      let neww = prev;
-      if (prev.del == 0) {
-        neww.del = 1;
-      } else {
-        neww.del = 0;
-      }
-      return neww;
-    });
+  function handleTaskDel(id) {
+    tasks[id].del = !tasks[id].del;
 
-    let box = document.getElementById(`taskbox${task.num}`);
+    let box = document.getElementById(`taskbox${id}`);
     let boxopc = box.style.opacity;
     document.documentElement.style.setProperty("--taskbox-opc", `${boxopc}`);
     if (box.classList.contains('hidden')) {
@@ -98,30 +112,13 @@ function TaskBox() {
         passive: false
       });
     }
-
   }
 
-  // function handleTaskInput(e) {
-  //   // let inputTask = document.getElementById(`task-input${task.num}`);
-  //   let inputword = e.target.value.toString();
-  //   if (inputword.length > 0) {
-  //     return inputword;
-  //   }
-  // }
+  function handleTaskTag(id) {
+    tasks[id].tag = !tasks[id].tag;
 
-  function handleTaskTag() {
-    setTask(prev => {
-      let neww = prev;
-      if (prev.tag == 0) {
-        neww.tag = 1;
-      } else {
-        neww.tag = 0;
-      }
-      return neww;
-    });
-
-    let btntag = document.getElementById(`task-tag${task.num}`);
-    let box = document.getElementById(`taskbox${task.num}`);
+    let btntag = document.getElementById(`task-tag${id}`);
+    let box = document.getElementById(`taskbox${id}`);
     if (btntag.classList.contains("important")) {
       btntag.classList.remove("important");
       box.classList.remove("importanttag");
@@ -129,72 +126,97 @@ function TaskBox() {
       btntag.classList.add("important");
       box.classList.add("importanttag");
     }
-    // let inputTask = document.getElementById(`task-input${task.num}`);
-    // inputTask.style.setProperty("z-index", "3");
-    
-    // window.addEventListener("keydown", (e) => {
-    //   if (e.key == "Enter") {
-    //     inputTask.style.setProperty("z-index", "-1");
-    //     setTask(prev => {
-    //       let neww = prev;
-    //       neww.word = value;
-    //       return neww;
-    //     });
-    //   }
-    // });
-    // window.removeEventListener("keydown");
-    // console.log("edit");
   }
-  
-  return (
-    <>
-      <div id={`taskbox${task.num}`}  className="box">
-        <div className="checkarea">
-          <input type="checkbox" id={`check${task.num}`} className="checkboxarea" onClick={handleTaskCheck}/>
-          <label htmlFor={`check${task.num}`} className="undo"><i className="fa fa-square" aria-hidden="true"></i></label>
-          <label htmlFor={`check${task.num}`} className="isdo"><i className="fa fa-check-square" aria-hidden="true"></i></label>
-        </div>
-        <div className="taskarea">
-          <input 
-            type="text" 
-            id={`task-input${task.num}`} 
-            className="task-input"
-            onChange={(e) => setTask(prev => {
-              let neww = prev;
-              neww.word = e.target.value;
-              return neww;
-            })} 
-            placeholder="New event"
-          />
-          <p id={`task-time${task.num}`} className="task-time">{task.time}</p>
-        </div>
-        <button id={`task-del${task.num}`} className="btn-task del" onClick={handleTaskDel}><i className="fa fa-trash" aria-hidden="true"></i></button>
-        <button id={`task-tag${task.num}`} className="btn-task tag" onClick={handleTaskTag}><i className="fa fa-star" aria-hidden="true"></i></button>
-      </div>
-    </>
-  )
-}
-
-function App() {
-  const [tasklist, setTasklist] = useState([<TaskBox key="0"></TaskBox>]);
-  const [title, setTitle] = useState("Hello TODO!");
 
   function handleTaskAdd() {
-    numOfTask += 1;
-    setTasklist(prev => {
-      let neww = [...prev];
-      let count = neww.length;
-      neww.push(<TaskBox key={count}></TaskBox>);
-      return neww;
+    var newdate = new Date();
+    const newtime = setTimeFormat(newdate.getFullYear(), newdate.getMonth() + 1, newdate.getDate(), newdate.getHours(), newdate.getMinutes());
+    setTasks(prev  => {
+      let newTasks = [...prev];
+      newTasks.push({ word: "", time: newtime, val: false, del: false, tag: false });
+      return newTasks;
     });
+    // document.getElementsByClassName("App").setProperty("height", ``);
+    /*
+    fetch("http://localhost:5173/task", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        word: "",
+        time: nowtime,
+        val: false,
+        del: false,
+        tag: false,
+      }),
+    }).then(() => {
+      const newTasks = [...tasks];
+      newTasks.push({ word: "", time: nowtime, val: false, del: false, tag: false });
+      setTasks(newTasks);
+    });
+    */
   }
 
-  // useEffect(() => {
-  //   fetch("http://localhost:5174/task")
-  //     .then((response) => response.json())
-  //     .then((json) => setItems(json));
-  // }, []);
+  function handleSelect(e) {
+    const selected = document.getElementById("selected");
+    // const taskboxs = document.querySelectorAll("TaskBox");
+    switch (e.target.value) {
+      case "all":
+        selected.innerHTML = "ALL";
+        setShow(showTask(tasks));
+        break;
+      case "tagged":
+        selected.innerHTML = "STARRED";
+        setShow(task_tag);
+        break;
+      case "undone":
+        selected.innerHTML = "UNDONE";
+        setShow(task_undo);
+        break;
+      case "done":
+        selected.innerHTML = "DONE";
+        setShow(task_do);
+        break;
+      case "deleted":
+        selected.innerHTML = "TRASH";
+        setShow(task_del);
+        break;
+      default:
+        return;
+  }
+}
+const showTask = (t) => t.map((task, id) => (
+  <TaskBox 
+    key={"task"+id}
+    task={task} 
+    id={id}
+    handleTaskCheck={() => handleTaskCheck(id)} 
+    handleTaskDel={() => handleTaskDel(id)} 
+    handleTaskTag={() => handleTaskTag(id)}
+  />
+));
+
+const task_tag = showTask(tasks.filter((task) => (task.tag == true && task.del == false)));
+const task_undo = showTask(tasks.filter((task) => (task.val == false && task.del == false)));
+const task_do = showTask(tasks.filter((task) => (task.val == true && task.del == false)));
+const task_del = showTask(tasks.filter((task) => (task.del == true)));
+
+  // let numOfBox = tasks.filter((task) => task.del == false).length;
+  // let element = document.getElementsByClassName("App");
+  // let prevHeight = window.getComputedStyle(element).getPropertyValue("height");
+  // document.documentElement.style.setProperty("--app-height", `calc(70px * (${numOfBox} - 1) + ${prevHeight})`);
   
+  useEffect(() => {
+    setShow(showTask(tasks));
+    console.log(tasks);
+    // console.log(tasks);
+  //   fetch("http://localhost:5173/task")
+  //     .then((response) => response.json())
+  //     .then((json) => setTasks(json));
+  }, [tasks]);
+  
+
   return (
     <>
       <div className="App">
@@ -204,13 +226,31 @@ function App() {
           placeholder="Hello TODO!"
           value={title} 
           onChange={(e) => setTitle(e.target.value)}
-          title="Tap to edit title" />
+          title="Tap to edit the title"
+          spellCheck="false" />
         <div className="boxs">
-          {tasklist}
+          {show}
         </div>
-        <button id="taskadd" onClick={handleTaskAdd}><i className="fa fa-plus-square" aria-hidden="true"></i></button>
-        {/* <button id="setting"><i className="fa fa-cog" aria-hidden="true"></i></button> */}
-        <div className="foot"><a href="https://github.com/r09521516/wordle.git">Designed by Lei</a></div>
+        <button 
+          id="taskadd" 
+          onClick={handleTaskAdd}><i className="fa fa-plus-square" aria-hidden="true"></i>
+        </button>
+        <div className="bars"><i className="fa fa-bars"></i></div>
+        <div className="select">
+          <label htmlFor="selectid">
+            <p id="selected">ALL</p>
+          </label>
+          <select id="selectid" onChange={(e) => handleSelect(e)}>
+            <option value="all">ALL</option>
+            <option value="tagged">STARRED</option>
+            <option value="undone">UNDONE</option>
+            <option value="done">DONE</option>
+            <option value="deleted">TRASH</option>
+          </select>
+        </div>
+        <div className="foot">
+          <a href="https://github.com/r09521516/todo.git">Designed by Lei</a>
+        </div>
       </div>
     </>
   )

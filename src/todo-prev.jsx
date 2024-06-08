@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-
+import { useState } from 'react'
+// import './App.css';
 
 const documentHeight = () => {
   const doc = document.documentElement;

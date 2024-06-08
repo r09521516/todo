@@ -3,6 +3,7 @@
   background-color: #fff;
   --doc-height: 100%;
   --word-color: rgba(68, 68, 68, 0.87);
+  --app-height: 333px;
   --taskbox-opc: 1;
 }
 
@@ -18,7 +19,8 @@ body {
 .App {
   width: 95vw;
   max-width: 380px;
-  min-height: 300px;
+  /* height: var(--app-height); */
+  min-height: 333px;
   background-color: #e5e9e2;
   border-radius: 20px;
   margin: 2em auto;
@@ -26,7 +28,7 @@ body {
   font-family: sans-serif;
   text-align: center;
   position: relative;
-  transition: 1s ease-in-out;
+  transition: height 1s ease-in-out;
 }
 
 .title {
@@ -114,7 +116,7 @@ body {
 }
 
 .isdo {
-  color: #91ad70;
+  color: #ddd;
   opacity: 0;
 }
 
@@ -127,6 +129,15 @@ body {
 }
 
 .checkboxarea:checked ~ label[class="isdo"] {
+  color: #91ad70;
+  opacity: 1;
+}
+
+.checkboxarea:hover ~ label[class="undo"] {
+  opacity: 0.5;
+}
+
+.checkboxarea:hover ~ label[class="isdo"] {
   opacity: 1;
 }
 
@@ -197,7 +208,7 @@ body {
   border: 2px solid #cac7a8;
 }
 
-.title:hover, .undo:hover, .isdo:hover, .del:hover, .tag:hover, #taskadd:hover {
+.title:hover, .undo:hover, .isdo:hover, .del:hover, .tag:hover, #taskadd:hover, .bars:hover {
   cursor: pointer;
 }
 
@@ -221,24 +232,113 @@ body {
   animation-iteration-count: infinite;
 }
 
-#setting {
-  margin: 0 auto;
+.bars {
+  width: 35px;
+  margin: 10px auto 20px;
   padding: 0;
-  font-size: 22px;
+  font-size: 16px;
+  font-weight: bold;
   color: #ccc;
-  background-color: #ffffff00;
-  border: 0;
   display: block;
+  position: relative;
   text-align: center;
   transition: 500ms ease-in-out;
 }
 
-#setting:hover {
+.bars:hover {
+  color: #ad7d70;
+}
+
+i[class="fa fa-bars"] {
+  transform: scaleX(1.8);
+  transition: transform 400ms ease-in-out;
+}
+
+.bars:hover i[class="fa fa-bars"] {
+  transform: scaleX(1.8) translateY(2px);
+}
+
+/* Arrow */
+.bars::after {
+  content: '<<';
+  font-size: 12px;
+  font-family: sans-serif;
+  font-weight: bold;
+  position: absolute;
+  top: 20px;
+  left: 9px;
+  color: #ccc;
+  opacity: 0;
+  transition: color 400ms ease-in-out, transform 200ms ease-in-out;
+  transform: scaleX(1.2) scaleY(0.6) rotate(-90deg);
+  /* pointer-events: none; */
+}
+
+.bars:hover::after {
+  opacity: 1;
+  color: #ad7d70;
+  transform: scaleX(1.5) scaleY(0.6) rotate(-90deg) translateX(-5px);
+}
+
+.select {
+  width: 120px;
+  height: 25px;
+  margin: 10px auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.select:hover #selected {
+  color: #ad7d70;
+}
+
+#selected {
+  margin: 0 auto;
+  padding: 0;
+  font-size: 16px;
+  text-align: center;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--word-color);
+  transition: 400ms ease-in-out;
+}
+
+select {
+  /* Reset Select */
+  appearance: none;
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  /* Personalize */
+  width: 100px;
+  height: 20px;
+  font-size: 16px;
+  flex: 1;
+  margin: auto auto;
+  padding: 0;
+  background-color: transparent;
+  background-image: none;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 15px;
+  opacity: 0;
+}
+/* Remove IE arrow */
+select::-ms-expand {
+  display: none;
+}
+
+select:hover {
   color: #ad7d70;
 }
 
 .foot {
-  margin: 1em 0;
+  margin: 0 0 1em;
   padding: 0.5em 0;
 }
 
@@ -320,13 +420,13 @@ a:hover {
   .box.importanttag:hover {
     background-color: #eeebd1;
   }
-  .undo {
+  .undo, .isdo {
     color: #ccc;
   }
   .btn-task {
     background-color: #ccc;
   }
-  #taskadd, #setting {
+  #taskadd, .bars {
     color: #bbb;
   }
   .foot {
