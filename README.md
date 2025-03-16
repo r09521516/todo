@@ -2,12 +2,15 @@
 
 # React Todo App
 
-Add todos.
+Add todo tasks and check them off when they're done. 
+
+You can also star important todos or delete them if they are not needed. Additionally, you can rename the 'Hello TODO!' title to anything you like. The menu bar below allows you to switch between different category views.
 
 Page: https://r09521516.github.io/todo/
 
 # Built with
 
+- HTML + CSS + Javascript
 - React
 
 # React + Vite
