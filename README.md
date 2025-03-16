@@ -10,7 +10,7 @@ Page: https://r09521516.github.io/todo/
 
 # Built with
 
-- HTML + CSS + Javascript
+- HTML + CSS + JavaScript
 - React
 
 # React + Vite
